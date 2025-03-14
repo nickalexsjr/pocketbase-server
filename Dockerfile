@@ -1,17 +1,14 @@
-# Use an Alpine Linux base image
+# Start with a basic image
 FROM alpine:latest
 
-# Set working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
 # Copy the PocketBase binary into the container
-COPY pocketbase.exe /app/pocketbase.exe
+COPY pocketbase /app/pocketbase
 
-# Expose the default PocketBase port
+# Expose the default PocketBase port (use the appropriate port)
 EXPOSE 8090
 
-# Grant execution permissions
-RUN chmod +x /app/pocketbase.exe
-
-# Run PocketBase on container start
-CMD ["/app/pocketbase.exe", "serve"]
+# Start PocketBase when the container is run
+CMD ["/app/pocketbase", "serve"]
