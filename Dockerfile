@@ -4,9 +4,6 @@ FROM alpine:latest
 # Set the working directory inside the container
 WORKDIR /app
 
-# Ensure the PocketBase binary is executable
-RUN chmod +x /app/pocketbase
-
 # Copy the PocketBase binary into the container
 COPY pocketbase /app/pocketbase
 
