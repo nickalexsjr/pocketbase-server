@@ -7,15 +7,15 @@ WORKDIR /app
 # Install dependencies
 RUN apk add --no-cache sqlite
 
-# Copy the PocketBase binary and make it executable
+# Copy the PocketBase binary
 COPY pocketbase /app/pocketbase
 RUN chmod +x /app/pocketbase
 
-# Create a folder for the database
+# Ensure a proper data directory
 RUN mkdir -p /app/pb_data
 
-# Expose the correct PocketBase port
+# Expose correct ports
 EXPOSE 8090
 
-# Start PocketBase, ensuring it serves correctly
-CMD ["/app/pocketbase", "serve", "--http", "0.0.0.0:8090", "--dir", "/app/pb_data"]
+# Start PocketBase and make sure it serves API correctly
+CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/app/pb_data", "--publicDir=/app/pb_public"]
