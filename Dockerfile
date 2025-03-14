@@ -4,7 +4,7 @@ FROM alpine:latest
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install dependencies
+# Install SQLite dependency
 RUN apk add --no-cache sqlite
 
 # Copy the PocketBase binary
