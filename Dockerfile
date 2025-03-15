@@ -1,26 +1,26 @@
-# Use a minimal base image
+# Use Alpine as base image
 FROM alpine:latest
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Install SQLite dependency (needed for PocketBase)
-RUN apk add --no-cache sqlite
+# Install required dependencies (SQLite & curl)
+RUN apk add --no-cache sqlite curl
 
-# Copy the PocketBase binary and make it executable
+# Copy PocketBase binary
 COPY pocketbase /app/pocketbase
 RUN chmod +x /app/pocketbase
 
-# Ensure a persistent data directory
-RUN mkdir -p /app/pb_data
+# Ensure persistent data directories
+RUN mkdir -p /app/pb_data /app/pb_public
 
-# Set correct environment variables
+# Set environment variables
 ENV POCKETBASE_DATA_DIR="/app/pb_data"
-ENV PORT=8090
 ENV POCKETBASE_PUBLIC_URL="https://pocketbase-server-j9pc.onrender.com"
+ENV PORT=8090
 
-# Expose the correct PocketBase port
+# Expose PocketBase port
 EXPOSE 8090
 
-# 🚀 **Force PocketBase to expose API routes properly**
+# Start PocketBase with proper binding & persistent storage
 CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/app/pb_data", "--publicDir=/app/pb_public"]
