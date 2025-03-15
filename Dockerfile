@@ -1,28 +1,23 @@
-# ✅ Use minimal Alpine image
+# Use a lightweight image
 FROM alpine:latest
 
-# ✅ Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# ✅ Install necessary dependencies
-RUN apk add --no-cache sqlite curl
-
-# ✅ Copy PocketBase binary into the container
+# Copy PocketBase binary
 COPY pocketbase /app/pocketbase
+
+# Ensure the binary is executable
 RUN chmod +x /app/pocketbase
 
-# ✅ Ensure persistent storage for database & files
-RUN mkdir -p /app/pb_data /app/pb_public
-
-# ✅ Set correct environment variables for Render
-ENV POCKETBASE_DATA_DIR="/app/pb_data"
-ENV POCKETBASE_PUBLIC_DIR="/app/pb_public"
-
-# ✅ **Force Public URL via Reverse Proxy (Fixed)**
-ENV POCKETBASE_PUBLIC_URL="https://pocketbase-server-j9pc.onrender.com"
-
-# ✅ Expose only the necessary port
+# Expose the default PocketBase port
 EXPOSE 8090
 
-# ✅ **Launch PocketBase with the correct bindings**
-CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/app/pb_data"]
+# Set environment variable for the data directory (persistent storage)
+ENV POCKETBASE_DATA_DIR=/pb_data
+
+# Create the data directory
+RUN mkdir -p $POCKETBASE_DATA_DIR
+
+# Start PocketBase and create a superuser on first boot
+CMD ["/bin/sh", "-c", "/app/pocketbase serve --http 0.0.0.0:8090 & sleep 5 && /app/pocketbase admin create --email admin@example.com --password AdminPass123"]
