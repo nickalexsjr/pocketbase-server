@@ -1,21 +1,23 @@
-# Use Alpine as base image
+# Use a lightweight image
 FROM alpine:latest
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
 # Copy PocketBase binary
 COPY pocketbase /app/pocketbase
 
-# Make PocketBase executable
+# Ensure the binary is executable
 RUN chmod +x /app/pocketbase
 
-# Set up persistent database storage
-VOLUME /pb_data
+# Set environment variable for the data directory (persistent storage)
 ENV POCKETBASE_DATA_DIR=/pb_data
 
-# Expose the correct port
+# Create the data directory
+RUN mkdir -p $POCKETBASE_DATA_DIR
+
+# Expose the correct PocketBase port
 EXPOSE 8090
 
-# Start PocketBase server
-CMD ["/app/pocketbase", "serve", "--http", "0.0.0.0:8090"]
+# Start PocketBase and create the superuser on first boot
+CMD ["/bin/sh", "-c", "/app/pocketbase serve --http 0.0.0.0:8090 & sleep 5 && /app/pocketbase superuser upsert admin@example.com AdminPass123"]
