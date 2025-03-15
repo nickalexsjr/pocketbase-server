@@ -17,9 +17,9 @@ RUN mkdir -p /app/pb_data
 # Expose the correct PocketBase port
 EXPOSE 8090
 
-# Force PocketBase to bind to the correct Render URL
+# Set environment variables for correct binding
 ENV POCKETBASE_PUBLIC_URL="https://pocketbase-server-j9pc.onrender.com"
 ENV PORT=8090
 
-# Start PocketBase with correct binding
-CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/app/pb_data", "--publicDir=/app/pb_public", "--public-url=https://pocketbase-server-j9pc.onrender.com"]
+# Start PocketBase with correct binding (NO `--public-url`)
+CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/app/pb_data", "--publicDir=/app/pb_public"]
