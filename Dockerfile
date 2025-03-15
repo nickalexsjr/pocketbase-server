@@ -22,5 +22,5 @@ ENV POCKETBASE_PUBLIC_URL="https://pocketbase-server-j9pc.onrender.com"
 # Expose the correct PocketBase port
 EXPOSE 8090
 
-# 🚀 **Start PocketBase with the correct binding**
-CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/app/pb_data"]
+# 🚀 **Force PocketBase to expose API routes properly**
+CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/app/pb_data", "--publicDir=/app/pb_public"]
