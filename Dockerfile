@@ -1,11 +1,8 @@
-# Use an official lightweight Alpine image
+# Use a lightweight image
 FROM alpine:latest
 
 # Set working directory inside the container
 WORKDIR /app
-
-# Install necessary dependencies
-RUN apk add --no-cache bash curl
 
 # Copy PocketBase binary
 COPY pocketbase /app/pocketbase
@@ -13,7 +10,7 @@ COPY pocketbase /app/pocketbase
 # Ensure the binary is executable
 RUN chmod +x /app/pocketbase
 
-# Expose the default PocketBase port
+# Expose the Render-assigned PORT
 EXPOSE 8090
 
 # Set environment variable for the data directory (persistent storage)
@@ -22,12 +19,5 @@ ENV POCKETBASE_DATA_DIR=/pb_data
 # Create the data directory
 RUN mkdir -p $POCKETBASE_DATA_DIR
 
-# Ensure PocketBase runs with the correct permissions
-RUN adduser -D -g '' pocketbase && \
-    chown -R pocketbase:pocketbase /app /pb_data
-
-# Switch to the non-root user
-USER pocketbase
-
-# Start PocketBase with reverse proxy configuration
-CMD ["/bin/sh", "-c", "/app/pocketbase serve --http 0.0.0.0:8090 --publicHttp https://pocketbase-server-j9pc.onrender.com --trusted-proxy 0.0.0.0"]
+# Start PocketBase and bind to the Render-assigned PORT
+CMD ["/bin/sh", "-c", "/app/pocketbase serve --http 0.0.0.0:$PORT"]
