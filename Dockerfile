@@ -1,24 +1,14 @@
-# Use a lightweight image
-FROM alpine:latest
+FROM alpine
 
-# Set working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy PocketBase binary
-COPY pocketbase /app/pocketbase
+# Copy PocketBase files to the container
+COPY . /app
 
-# Ensure the binary is executable
-RUN chmod +x /app/pocketbase
-
-# Expose the correct port (Render assigns this dynamically)
+# Expose the default PocketBase port
 EXPOSE 8090
 
-# Set environment variables for persistent storage and proxy handling
-ENV POCKETBASE_DATA_DIR=/pb_data
-ENV POCKETBASE_TRUST_PROXY=true
-
-# Create the data directory
-RUN mkdir -p $POCKETBASE_DATA_DIR
-
-# Start PocketBase with dynamic port binding
-CMD ["/bin/sh", "-c", "/app/pocketbase serve --http 0.0.0.0:$PORT"]
+# Grant execute permissions and run PocketBase
+RUN chmod +x pocketbase
+CMD ["./pocketbase", "serve", "--http=0.0.0.0:8090"]
