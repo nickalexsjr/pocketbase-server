@@ -23,3 +23,4 @@ RUN mkdir -p $POCKETBASE_DATA_DIR
 
 # Start PocketBase, binding it to the correct URL
 CMD ["/bin/sh", "-c", "/app/pocketbase serve --http 0.0.0.0:$PORT --public-url https://pocketbase-server-j9pc.onrender.com"]
+
